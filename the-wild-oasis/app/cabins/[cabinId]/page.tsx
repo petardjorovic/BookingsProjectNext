@@ -1,30 +1,42 @@
 import Image from "next/image";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
-import { getCabin } from "@/app/_lib/data-service";
+import { getCabin, getCabins } from "@/app/_lib/data-service";
+import { Metadata } from "next";
 
 type GenerateMetadataProps = {
-  params: {
+  params: Promise<{
     cabinId: string;
-  };
+  }>;
 };
 
-export async function generateMetadata({ params }: GenerateMetadataProps) {
+export async function generateMetadata({
+  params,
+}: GenerateMetadataProps): Promise<Metadata> {
   const { cabinId } = await params;
   const { name } = await getCabin(Number(cabinId));
   return { title: `Cabin ${name}` };
 }
 
+export async function generateStaticParams() {
+  const cabins = await getCabins();
+
+  const ids = cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
+
+  return ids;
+}
+
 type PageProps = {
-  params: {
+  params: Promise<{
     cabinId: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: PageProps) {
   const { cabinId } = await params;
   const cabin = await getCabin(Number(cabinId));
-  const { id, name, maxCapacity, regularPrice, discount, image, description } =
-    cabin;
+  // const { id, name, maxCapacity, regularPrice, discount, image, description } =
+  //   cabin;
+  const { name, maxCapacity, image, description } = cabin;
 
   return (
     <div className="max-w-6xl mx-auto mt-8">
