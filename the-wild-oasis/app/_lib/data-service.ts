@@ -1,12 +1,17 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabaseClient";
 import { Database } from "@/database.types";
-import { CabinPreview, CabinPreviewArraySchema } from "./validationSchemas";
+import {
+  CabinPreview,
+  CabinPreviewArraySchema,
+  FullCabin,
+  FullCabinPreviewSchema,
+} from "./validationSchemas";
 
 /////////////
 // GET
 
-export async function getCabin(id: number) {
+export async function getCabin(id: number): Promise<FullCabin> {
   const { data, error } = await supabase
     .from("cabins")
     .select("*")
@@ -20,7 +25,14 @@ export async function getCabin(id: number) {
     console.error(error);
   }
 
-  return data;
+  const parsed = FullCabinPreviewSchema.safeParse(data);
+
+  if (!parsed.success) {
+    console.error(parsed.error);
+    throw new Error("Cabin could not be loaded");
+  }
+
+  return parsed.data;
 }
 
 export async function getCabinPrice(id: number) {
