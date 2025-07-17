@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Josefin_Sans } from "next/font/google"; //* umesto google stavi local ako hoces svoj font iz kompa
+import { Josefin_Sans } from "next/font/google"; //** umesto google stavi local ako hoces svoj font iz kompa */
 import "@/app/_styles/globals.css";
 import Header from "./_components/Header";
 
@@ -22,6 +22,8 @@ export const metadata: Metadata = {
 interface RootLayoutProps {
   children: React.ReactNode;
 }
+
+//! ako fetchujes podatke direktno u RootLayout-u onda koristi global-error.tsx da bi uhvatio greske prilikom rendera RootLayout-a
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (

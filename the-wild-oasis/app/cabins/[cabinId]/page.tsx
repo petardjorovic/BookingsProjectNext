@@ -9,7 +9,7 @@ type GenerateMetadataProps = {
 };
 
 export async function generateMetadata({ params }: GenerateMetadataProps) {
-  const { cabinId } = params;
+  const { cabinId } = await params;
   const { name } = await getCabin(Number(cabinId));
   return { title: `Cabin ${name}` };
 }

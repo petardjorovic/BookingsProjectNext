@@ -1,6 +1,8 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabaseClient";
-import { Database } from "@/database.types";
+import { notFound } from "next/navigation";
+
+import { Database } from "@/app/_lib/database.types";
 import {
   CabinPreview,
   CabinPreviewArraySchema,
@@ -23,6 +25,7 @@ export async function getCabin(id: number): Promise<FullCabin> {
 
   if (error) {
     console.error(error);
+    notFound();
   }
 
   const parsed = FullCabinPreviewSchema.safeParse(data);
