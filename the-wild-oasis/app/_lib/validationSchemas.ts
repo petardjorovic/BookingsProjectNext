@@ -25,3 +25,7 @@ export const FullCabinPreviewSchema = z.object({
 });
 
 export type FullCabin = z.infer<typeof FullCabinPreviewSchema>;
+
+export const searchParamsSchema = z.object({
+  capacity: z.enum(["small", "medium", "large", "all"]).optional(),
+});
