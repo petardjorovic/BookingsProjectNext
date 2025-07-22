@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google"; //** umesto google stavi local ako hoces svoj font iz kompa */
 import "@/app/_styles/globals.css";
 import Header from "./_components/Header";
+import ReservationContextProvider from "./_components/ReservationContextProvider";
 
 const josefin = Josefin_Sans({
   display: "swap",
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       >
         <Header />
         <div className="flex-1 px-8 py-12 grid">
-          <main className="max-w-7xl mx-auto w-full">{children}</main>
+          <main className="max-w-7xl mx-auto w-full">
+            <ReservationContextProvider>{children}</ReservationContextProvider>
+          </main>
         </div>
       </body>
     </html>

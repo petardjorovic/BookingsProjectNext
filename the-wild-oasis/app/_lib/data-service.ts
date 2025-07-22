@@ -1,13 +1,16 @@
-// import { eachDayOfInterval } from "date-fns";
+import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabaseClient";
 import { notFound } from "next/navigation";
 
 import { Database } from "@/app/_lib/database.types";
 import {
+  BookingArraySchema,
   CabinPreview,
   CabinPreviewArraySchema,
   FullCabin,
   FullCabinPreviewSchema,
+  Settings,
+  SettingsSchema,
 } from "./validationSchemas";
 
 /////////////
@@ -121,46 +124,61 @@ export const getCabins = async function (): Promise<CabinPreview[]> {
 //   return data;
 // }
 
-// export async function getBookedDatesByCabinId(cabinId: number) {
-//   let today = new Date();
-//   today.setUTCHours(0, 0, 0, 0);
-//   today = today.toISOString();
+export async function getBookedDatesByCabinId(
+  cabinId: number
+): Promise<Date[]> {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  // today = today.toISOString();
 
-//   // Getting all bookings
-//   const { data, error } = await supabase
-//     .from("bookings")
-//     .select("*")
-//     .eq("cabinId", cabinId)
-//     .or(`startDate.gte.${today},status.eq.checked-in`);
+  // Getting all bookings
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("cabinId", cabinId)
+    .or(`startDate.gte.${today.toISOString()},status.eq.checked-in`);
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Bookings could not get loaded");
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not get loaded");
+  }
 
-//   // Converting to actual dates to be displayed in the date picker
-//   const bookedDates = data
-//     .map((booking) => {
-//       return eachDayOfInterval({
-//         start: new Date(booking.startDate),
-//         end: new Date(booking.endDate),
-//       });
-//     })
-//     .flat();
+  const parsed = BookingArraySchema.safeParse(data);
 
-//   return bookedDates;
-// }
+  if (!parsed.success) {
+    console.error(parsed.error);
+    throw new Error("Bookings could not be loaded");
+  }
 
-// export async function getSettings() {
-//   const { data, error } = await supabase.from("settings").select("*").single();
+  // Converting to actual dates to be displayed in the date picker
+  const bookedDates = parsed.data
+    .map((booking) => {
+      return eachDayOfInterval({
+        start: new Date(booking.startDate),
+        end: new Date(booking.endDate),
+      });
+    })
+    .flat();
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Settings could not be loaded");
-//   }
+  return bookedDates;
+}
 
-//   return data;
-// }
+export async function getSettings(): Promise<Settings> {
+  const { data, error } = await supabase.from("settings").select("*").single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Settings could not be loaded");
+  }
+
+  const parsed = SettingsSchema.safeParse(data);
+  if (!parsed.success) {
+    console.error(parsed.error);
+    throw new Error("Settings could not be loaded");
+  }
+
+  return parsed.data;
+}
 
 type Country = {
   name: string;

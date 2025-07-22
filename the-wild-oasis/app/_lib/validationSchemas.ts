@@ -29,3 +29,36 @@ export type FullCabin = z.infer<typeof FullCabinPreviewSchema>;
 export const searchParamsSchema = z.object({
   capacity: z.enum(["small", "medium", "large", "all"]).optional(),
 });
+
+export const BookingSchema = z.object({
+  id: z.number(),
+  created_at: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  numNights: z.number(),
+  numGuests: z.number(),
+  cabinPrice: z.number(),
+  extrasPrice: z.number(),
+  totalPrice: z.number(),
+  status: z.string(),
+  hasBreakfast: z.boolean(),
+  isPaid: z.boolean(),
+  observations: z.string().nullable(),
+  cabinId: z.number(),
+  guestId: z.number(),
+});
+
+export const BookingArraySchema = z.array(BookingSchema);
+
+export type Booking = z.infer<typeof BookingSchema>;
+
+export const SettingsSchema = z.object({
+  id: z.number(),
+  created_at: z.string(),
+  minBookingLength: z.number(),
+  maxBookingLength: z.number(),
+  maxGuestPerBooking: z.number(),
+  breakfastPrice: z.number(),
+});
+
+export type Settings = z.infer<typeof SettingsSchema>;
