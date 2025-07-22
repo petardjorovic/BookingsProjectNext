@@ -9,7 +9,7 @@ import {
 } from "react";
 
 type ReservationContextProps = {
-  range: { from: Date | undefined; to: Date | undefined };
+  range: { from: Date | undefined; to?: Date | undefined };
   setRange: Dispatch<
     SetStateAction<{
       from: Date | undefined;
@@ -23,7 +23,7 @@ export const ReservationContext = createContext<
   ReservationContextProps | undefined
 >(undefined);
 
-const initialState: { from: Date | undefined; to: Date | undefined } = {
+const initialState: { from: Date | undefined; to?: Date | undefined } = {
   from: undefined,
   to: undefined,
 };

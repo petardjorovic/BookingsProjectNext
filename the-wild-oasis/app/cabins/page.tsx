@@ -4,6 +4,7 @@ import CabinList from "../_components/CabinList";
 import Spinner from "../_components/Spinner";
 import { searchParamsSchema } from "../_lib/validationSchemas";
 import Filter from "../_components/Filter";
+import ReservationReminder from "../_components/ReservationReminder";
 
 // export const revalidate = 15;
 //* Ovo vise nema svrhe jer je nije vise static page zbog searchParams
@@ -42,6 +43,7 @@ export default async function Page({ searchParams }: PageProps) {
 
       <Suspense fallback={<Spinner />} key={filter}>
         <CabinList filter={filter} />
+        <ReservationReminder />
       </Suspense>
     </div>
   );

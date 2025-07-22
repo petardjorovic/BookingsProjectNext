@@ -1,12 +1,14 @@
 "use client";
 
 import { FullCabin } from "../_lib/validationSchemas";
+import { useReservation } from "../hooks/useReservation";
 
 type ReservationFormProps = {
   cabin: FullCabin;
 };
 
 function ReservationForm({ cabin }: ReservationFormProps) {
+  const { range } = useReservation();
   // CHANGE
   const maxCapacity = cabin.maxCapacity;
 
@@ -26,6 +28,10 @@ function ReservationForm({ cabin }: ReservationFormProps) {
           <p>{user.name}</p>
         </div> */}
       </div>
+
+      <p>
+        {range.from?.toString()} to {range.to?.toString()}
+      </p>
 
       <form className="bg-primary-900 py-10 px-10 text-lg flex gap-5 flex-col">
         <div className="space-y-2">
