@@ -1,12 +1,15 @@
 import { getBookedDatesByCabinId, getCabin } from "@/app/_lib/data-service";
 
-type GetProps = {
-  params: Promise<{
-    cabinId: string;
-  }>;
-};
-
-export async function GET(request: Request, { params }: GetProps) {
+export async function GET(
+  request: Request,
+  {
+    params,
+  }: {
+    params: Promise<{
+      cabinId: string;
+    }>;
+  }
+) {
   const { cabinId } = await params;
 
   try {
@@ -19,3 +22,5 @@ export async function GET(request: Request, { params }: GetProps) {
     return Response.json({ message: "Cabin not found" });
   }
 }
+
+// export function POST() {}
