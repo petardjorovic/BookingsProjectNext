@@ -1,13 +1,15 @@
 "use client";
 
+import { User } from "next-auth";
 import { FullCabin } from "../_lib/validationSchemas";
 import { useReservation } from "../hooks/useReservation";
 
 type ReservationFormProps = {
   cabin: FullCabin;
+  user: User;
 };
 
-function ReservationForm({ cabin }: ReservationFormProps) {
+function ReservationForm({ cabin, user }: ReservationFormProps) {
   const { range } = useReservation();
   // CHANGE
   const maxCapacity = cabin.maxCapacity;
@@ -17,21 +19,17 @@ function ReservationForm({ cabin }: ReservationFormProps) {
       <div className="bg-primary-800 text-primary-300 px-10 py-2 flex justify-between items-center">
         <p>Logged in as</p>
 
-        {/* <div className='flex gap-4 items-center'>
+        <div className="flex gap-4 items-center">
           <img
             // Important to display google profile images
-            referrerPolicy='no-referrer'
-            className='h-8 rounded-full'
-            src={user.image}
-            alt={user.name}
+            referrerPolicy="no-referrer"
+            className="h-8 rounded-full"
+            src={user?.image || ""}
+            alt={user?.name || "user-avatar"}
           />
           <p>{user.name}</p>
-        </div> */}
+        </div>
       </div>
-
-      <p>
-        {range.from?.toString()} to {range.to?.toString()}
-      </p>
 
       <form className="bg-primary-900 py-10 px-10 text-lg flex gap-5 flex-col">
         <div className="space-y-2">
