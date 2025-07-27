@@ -56,6 +56,7 @@ export async function getCabinPrice(id: number) {
 }
 
 export type Cabin = Database["public"]["Tables"]["cabins"]["Row"];
+export type Guest = Database["public"]["Tables"]["guests"]["Row"];
 
 export const getCabins = async function (): Promise<CabinPreview[]> {
   const { data, error } = await supabase
