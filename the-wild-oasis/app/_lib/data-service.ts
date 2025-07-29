@@ -5,6 +5,9 @@ import { notFound } from "next/navigation";
 import { Database } from "@/app/_lib/database.types";
 import {
   BookingArraySchema,
+  BookingsPerGuest,
+  BookingsPerGuestArray,
+  BookingsPerGuestSchema,
   CabinPreview,
   CabinPreviewArraySchema,
   FullCabin,
@@ -107,23 +110,32 @@ export async function getGuest(email: string) {
 //   return data;
 // }
 
-// export async function getBookings(guestId: number) {
-//   const { data, error, count } = await supabase
-//     .from("bookings")
-//     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
-//     .select(
-//       "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)"
-//     )
-//     .eq("guestId", guestId)
-//     .order("startDate");
+export async function getBookings(
+  guestId: number
+): Promise<BookingsPerGuest[]> {
+  const { data, error, count } = await supabase
+    .from("bookings")
+    // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
+    .select(
+      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)"
+    )
+    .eq("guestId", guestId)
+    .order("startDate");
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Bookings could not get loaded");
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not get loaded");
+  }
 
-//   return data;
-// }
+  const parsed = BookingsPerGuestArray.safeParse(data);
+
+  if (!parsed.success) {
+    console.error(parsed.error);
+    throw new Error("Bookings could not get loaded");
+  }
+
+  return parsed.data;
+}
 
 export async function getBookedDatesByCabinId(
   cabinId: number

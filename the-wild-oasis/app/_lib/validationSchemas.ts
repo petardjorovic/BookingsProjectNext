@@ -62,3 +62,23 @@ export const SettingsSchema = z.object({
 });
 
 export type Settings = z.infer<typeof SettingsSchema>;
+
+export const BookingsPerGuestSchema = z.object({
+  id: z.number(),
+  created_at: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  numNights: z.number(),
+  numGuests: z.number(),
+  totalPrice: z.number(),
+  cabinId: z.number(),
+  guestId: z.number(),
+  cabins: z.object({
+    name: z.string(),
+    image: z.string(),
+  }),
+});
+
+export const BookingsPerGuestArray = z.array(BookingsPerGuestSchema);
+
+export type BookingsPerGuest = z.infer<typeof BookingsPerGuestSchema>;

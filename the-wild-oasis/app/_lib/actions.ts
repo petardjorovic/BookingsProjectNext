@@ -41,5 +41,5 @@ export async function updateGuest(formData: FormData) {
 
   if (error) throw new Error("Guest could not be updated");
 
-  revalidatePath("/account/profile");
+  revalidatePath("/account");
 }

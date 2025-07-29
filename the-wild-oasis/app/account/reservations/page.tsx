@@ -1,25 +1,18 @@
-import ReservationCard from "@/app/_components/ReservationCard";
-import type { Metadata } from "next";
 import Link from "next/link";
+import { auth } from "@/app/_lib/auth";
+import type { Metadata } from "next";
+import ReservationCard from "@/app/_components/ReservationCard";
+import { getBookings } from "@/app/_lib/data-service";
 
 export const metadata: Metadata = {
   title: "Reservations",
 };
 
-export default function Page() {
+export default async function Page() {
   // CHANGE
-  const bookings: {
-    id: number;
-    guestId: number;
-    startDate: string;
-    endDate: string;
-    numNights: number;
-    totalPrice: number;
-    numGuests: number;
-    status: string;
-    created_at: string;
-    cabins: { name: string; image: string };
-  }[] = [];
+  const session = await auth();
+  if (!session?.user.guestId) throw new Error("You must be logged in");
+  const bookings = await getBookings(session?.user.guestId);
 
   return (
     <div>
