@@ -3,7 +3,7 @@
 import { useOptimistic } from "react";
 import { BookingsPerGuest } from "../_lib/validationSchemas";
 import ReservationCard from "./ReservationCard";
-import { deleteReservation } from "../_lib/actions";
+import { deleteBooking } from "../_lib/actions";
 
 export default function ReservationList({
   bookings,
@@ -19,7 +19,7 @@ export default function ReservationList({
 
   async function handleDelete(bookingId: number) {
     optimisticDelete(bookingId);
-    await deleteReservation(bookingId);
+    await deleteBooking(bookingId);
   }
 
   return (

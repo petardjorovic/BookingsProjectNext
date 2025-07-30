@@ -1,5 +1,5 @@
 import SubmitButton from "@/app/_components/SubmitButton";
-import { updateReservation } from "@/app/_lib/actions";
+import { updateBooking } from "@/app/_lib/actions";
 import { getBooking } from "@/app/_lib/data-service";
 
 export default async function Page({
@@ -22,7 +22,7 @@ export default async function Page({
 
       <form
         className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col"
-        action={updateReservation}
+        action={updateBooking}
       >
         <input type="hidden" value={bookingId} name="bookingId" />
         <div className="space-y-2">

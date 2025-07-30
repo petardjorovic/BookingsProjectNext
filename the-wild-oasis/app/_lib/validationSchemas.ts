@@ -91,3 +91,21 @@ export const BookingCabinSchema = BookingSchema.extend({
 });
 
 export type BookingCabin = z.infer<typeof BookingCabinSchema>;
+
+export const NewBookingSchema = z.object({
+  startDate: z.string(),
+  endDate: z.string(),
+  numNights: z.number(),
+  cabinPrice: z.number(),
+  cabinId: z.number(),
+  guestId: z.number(),
+  numGuests: z.number(),
+  observations: z.string().max(1000).nullable(),
+  extrasPrice: z.number(),
+  totalPrice: z.number(),
+  isPaid: z.boolean(),
+  hasBreakfast: z.boolean(),
+  status: z.enum(["unconfirmed", "checked-in", "checked-out"]),
+});
+
+export type NewBooking = z.infer<typeof NewBookingSchema>;
