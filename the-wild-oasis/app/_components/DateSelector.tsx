@@ -1,18 +1,27 @@
 "use client";
 
-import { isWithinInterval } from "date-fns";
+import {
+  differenceInDays,
+  isPast,
+  isSameDay,
+  isWithinInterval,
+} from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { FullCabin, Settings } from "../_lib/validationSchemas";
 import { useReservation } from "../hooks/useReservation";
 
-function isAlreadyBooked(range: { from: Date; to: Date }, datesArr: Date[]) {
+function isAlreadyBooked(
+  range: { from: Date | undefined; to?: Date | undefined },
+  datesArr: Date[]
+) {
   return (
     range.from &&
     range.to &&
-    datesArr.some((date) =>
-      isWithinInterval(date, { start: range.from, end: range.to })
-    )
+    datesArr.some((date) => {
+      if (range.from !== undefined && range.to !== undefined)
+        return isWithinInterval(date, { start: range.from, end: range.to });
+    })
   );
 }
 
@@ -24,11 +33,16 @@ type DateSelectorProps = {
 
 function DateSelector({ settings, cabin, bookedDates }: DateSelectorProps) {
   const { range, setRange, resetRange } = useReservation();
-  // CHANGE
-  const regularPrice = 23;
-  const discount = 23;
-  const numNights = 23;
-  const cabinPrice = 23;
+
+  const displayRange = isAlreadyBooked(range, bookedDates)
+    ? { from: undefined, to: undefined }
+    : range;
+  const { regularPrice, discount } = cabin;
+  const numNights = differenceInDays(
+    displayRange.to || "",
+    displayRange.from || ""
+  );
+  const cabinPrice = numNights * (regularPrice - discount);
   // const range = { from: null, to: null };
 
   // SETTINGS
@@ -42,8 +56,12 @@ function DateSelector({ settings, cabin, bookedDates }: DateSelectorProps) {
         min={minBookingLength + 1}
         max={maxBookingLength}
         startMonth={new Date()}
-        disabled={{ before: new Date() }}
-        selected={range}
+        // disabled={{ before: new Date() }}
+        disabled={(curDate) =>
+          isPast(curDate) ||
+          bookedDates.some((date) => isSameDay(date, curDate))
+        }
+        selected={displayRange}
         onSelect={(range) => {
           if (range) setRange(range);
         }}
