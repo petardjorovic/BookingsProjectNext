@@ -82,3 +82,12 @@ export const BookingsPerGuestSchema = z.object({
 export const BookingsPerGuestArray = z.array(BookingsPerGuestSchema);
 
 export type BookingsPerGuest = z.infer<typeof BookingsPerGuestSchema>;
+
+export const BookingCabinSchema = BookingSchema.extend({
+  cabins: z.object({
+    name: z.string(),
+    maxCapacity: z.number(),
+  }),
+});
+
+export type BookingCabin = z.infer<typeof BookingCabinSchema>;

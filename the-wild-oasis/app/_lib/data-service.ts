@@ -5,9 +5,10 @@ import { notFound } from "next/navigation";
 import { Database } from "@/app/_lib/database.types";
 import {
   BookingArraySchema,
+  BookingCabin,
+  BookingCabinSchema,
   BookingsPerGuest,
   BookingsPerGuestArray,
-  BookingsPerGuestSchema,
   CabinPreview,
   CabinPreviewArraySchema,
   FullCabin,
@@ -95,20 +96,27 @@ export async function getGuest(email: string) {
   return data;
 }
 
-// export async function getBooking(id: number) {
-//   const { data, error, count } = await supabase
-//     .from("bookings")
-//     .select("*")
-//     .eq("id", id)
-//     .single();
+export async function getBooking(id: number): Promise<BookingCabin> {
+  const { data, error, count } = await supabase
+    .from("bookings")
+    .select("*, cabins(name, maxCapacity)")
+    .eq("id", id)
+    .single();
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Booking could not get loaded");
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not get loaded");
+  }
 
-//   return data;
-// }
+  const parsed = BookingCabinSchema.safeParse(data);
+
+  if (!parsed.success) {
+    console.error(parsed.error);
+    throw new Error("Booking cannot be loaded");
+  }
+
+  return parsed.data;
+}
 
 export async function getBookings(
   guestId: number
@@ -279,15 +287,15 @@ export async function createGuest(newGuest: {
 //   return data;
 // }
 
-// /////////////
-// // DELETE
+/////////////
+// DELETE
 
-// export async function deleteBooking(id) {
-//   const { data, error } = await supabase.from("bookings").delete().eq("id", id);
+export async function deleteBooking(id: number) {
+  const { data, error } = await supabase.from("bookings").delete().eq("id", id);
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Booking could not be deleted");
-//   }
-//   return data;
-// }
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be deleted");
+  }
+  return data;
+}
