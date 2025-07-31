@@ -61,7 +61,7 @@ export async function createBooking(
     throw new Error("Booking could not be created");
   }
 
-  revalidatePath(`/cabins/${bookingData.cabinId}`);
+  await revalidatePath(`/cabins/${bookingData.cabinId}`);
 
   redirect("/cabins/thankyou");
 }
